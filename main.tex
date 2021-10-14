@@ -1,0 +1,98 @@
+\documentclass[twocolumn, 10pt]{article}
+
+\usepackage[left=0.75in, right=0.75in, top=1.0in, bottom=1.0in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{appendix}
+\usepackage[backend=biber, bibstyle=ieee, citestyle=numeric, sorting=none, maxnames=6, minnames=1, maxcitenames=2]{biblatex}
+% Set natbib=true in the biblatex options to use \citet if the \citeauthorref command is not enough.
+
+% Set column width.
+\setlength{\columnsep}{2.0em}
+
+% Set indentation.
+\setlength{\parindent}{1.0em}
+
+% Bibliography file.
+\addbibresource[]{main.bib}
+
+% Shortcut to citations, based on citet.
+\newcommand{\ccitet}[1]{\citeauthor*{#1}~\cite{#1}}
+
+% Change DOI typesetting to doi.
+\DeclareFieldFormat{doi}{
+    doi\addcolon\space
+    \ifhyperref
+    {\lowercase{\href{https://doi.org/#1}{\nolinkurl{#1}}}}
+    {\lowercase{\nolinkurl{#1}}}
+}
+
+% Remove period if DOI is not given (= use a link instead).
+\renewcommand*{\finentrypunct}{\ifboolexpr{togl {bbx:doi} and test {\iffieldundef{doi}}}{}{\addperiod}}
+
+% Redefine macro to print a comma instead of a dot when using DOI.
+% Original definition in: /usr/share/texlive/texmf-dist/tex/latex/biblatex-ieee/ieee.bbx
+\renewbibmacro*{doi+eprint+url}{
+    \setunit{\addcomma} % Use comma here instead of space.
+    \iftoggle{bbx:doi}
+    {\printfield{doi}}
+    {}
+    \setunit{\adddot\addspace}
+    \iftoggle{bbx:eprint}
+    {\usebibmacro{eprint}}
+    {}
+    \setunit{\adddot\addspace}
+    \iftoggle{bbx:url}
+    {\usebibmacro{url+urldate}}
+    {}
+}
+
+% Redefine title.
+\makeatletter
+\def\@maketitle{%
+    \newpage
+    \null
+    \vspace{-3.0em}
+    \begin{center}%
+        \let \footnote \thanks
+        {\LARGE \@title \par}%
+        \vskip 1.5em%
+            {\large
+        \lineskip .5em%
+        \begin{tabular}[t]{c}%
+            \@author
+        \end{tabular}\par}%
+        \vskip 1em%
+        %{\large \@date}%
+    \end{center}%
+    \par
+    \vskip 4.0em}
+\makeatother
+
+\begin{document}
+
+    \title{\textbf{Title\\Goes Here}}
+    \author{
+        Author Name\\
+        Department for Mathematics and Computer Science\\
+        University of Basel\\
+        author@mail.com
+    }
+
+    \maketitle
+
+    \input{front/abstract.tex}
+
+    \input{./sections/introduction.tex}
+    \input{./sections/foundations.tex}
+    \input{./sections/results.tex}
+    \input{./sections/rw.tex}
+    \input{./sections/conclusions.tex}
+
+    \printbibliography
+
+    \begin{appendices}
+        \input{back/appendix.tex}
+    \end{appendices}
+
+\end{document}
